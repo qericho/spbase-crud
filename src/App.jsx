@@ -1,11 +1,11 @@
 import Crud from "./Crud";
-
+import { ThemeProvider } from "./context/ThemeContext";
 const App = () => {
   return (
     <>
-      <div className="w-full h-screen flex justify-center">
+      <ThemeProvider>
         <Crud />
-      </div>
+      </ThemeProvider>
     </>
   );
 };
