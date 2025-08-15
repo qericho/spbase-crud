@@ -3,40 +3,48 @@ import Crud from "./Crud";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { ThemeProvider } from "./context/ThemeContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { supabase } from "./supabaseClient";
 
-// ProtectedRoute checks if user is logged in before allowing access
-const ProtectedRoute = ({ children }) => {
+// --- Auth Context to share session across app ---
+const AuthContext = createContext();
+
+export const useAuth = () => useContext(AuthContext);
+
+const AuthProvider = ({ children }) => {
   const [session, setSession] = useState(undefined);
 
   useEffect(() => {
-    // Get current session
     const getSession = async () => {
       const { data } = await supabase.auth.getSession();
       setSession(data.session);
     };
     getSession();
 
-    // Listen for auth state changes
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
+      (_event, session) => setSession(session)
     );
 
-    // Cleanup listener on unmount
-    return () => {
-      listener.subscription.unsubscribe();
-    };
+    return () => listener.subscription.unsubscribe();
   }, []);
 
-  // Loading state while checking session
+  return (
+    <AuthContext.Provider value={{ session }}>{children}</AuthContext.Provider>
+  );
+};
+
+// --- Protected Route ---
+const ProtectedRoute = ({ children }) => {
+  const { session } = useAuth();
+
   if (session === undefined) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
   }
 
-  // Redirect to login if not authenticated
   if (!session) {
     return <Navigate to="/login" replace />;
   }
@@ -44,32 +52,68 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// --- Redirect logged-in users from login/register pages ---
+const PublicRoute = ({ children }) => {
+  const { session } = useAuth();
+
+  if (session === undefined) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg">Loading...</p>
+      </div>
+    );
+  }
+
+  if (session) {
+    return <Navigate to="/crud" replace />;
+  }
+
+  return children;
+};
+
+// --- App Component ---
 const App = () => {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public routes */}
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              }
+            />
 
-          {/* Protected CRUD route */}
-          <Route
-            path="/crud"
-            element={
-              <ProtectedRoute>
-                <Crud />
-              </ProtectedRoute>
-            }
-          />
+            {/* Protected CRUD route */}
+            <Route
+              path="/crud"
+              element={
+                <ProtectedRoute>
+                  <Crud />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Redirect default "/" to "/login" */}
-          <Route path="/" element={<Navigate to="/login" replace />} />
+            {/* Default route */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-          {/* Redirect any unknown routes to "/login" */}
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      </BrowserRouter>
+            {/* Catch-all unknown routes */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 };
