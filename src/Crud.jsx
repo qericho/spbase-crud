@@ -135,19 +135,19 @@ const Crud = () => {
           {theme === "dark" ? <MdDarkMode /> : <MdLightMode />}
         </span>
 
-        <h2 className="text-xl font-bold mb-4">Add New Task</h2>
+        <h2 className="text-xl font-bold mb-4">SIMPLE CRUD</h2>
 
         <input
           value={newTask.task}
           onChange={(e) =>
             setNewTask((prev) => ({ ...prev, task: e.target.value }))
           }
-          className={`border rounded px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 transition-colors duration-300 ${
+          className={`border rounded px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 transition-colors duration-300 text-gray-400 ${
             errors.add.task
               ? "border-red-500 focus:ring-red-400"
               : theme === "dark"
-              ? "border-gray-600 focus:ring-blue-400 bg-gray-700 text-white"
-              : "border-gray-400 focus:ring-blue-400 bg-white text-black"
+              ? "border-gray-600 focus:ring-blue-400 bg-gray-700"
+              : "border-gray-400 focus:ring-blue-400 bg-white "
           }`}
           type="text"
           placeholder="Task"
@@ -158,12 +158,12 @@ const Crud = () => {
           onChange={(e) =>
             setNewTask((prev) => ({ ...prev, desc: e.target.value }))
           }
-          className={`border rounded px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 transition-colors duration-300 ${
+          className={`border rounded px-3 py-2 w-full mb-3 focus:outline-none focus:ring-2 transition-colors duration-300  text-gray-400 ${
             errors.add.desc
               ? "border-red-500 focus:ring-red-400"
               : theme === "dark"
-              ? "border-gray-600 focus:ring-blue-400 bg-gray-700 text-white"
-              : "border-gray-400 focus:ring-blue-400 bg-white text-black"
+              ? "border-gray-600 focus:ring-blue-400 bg-gray-700"
+              : "border-gray-400 focus:ring-blue-400 bg-white"
           }`}
           placeholder="Description"
           rows={3}
@@ -221,7 +221,7 @@ const Crud = () => {
                 </div>
               ) : (
                 <div className="flex flex-col w-full h-[150px] overflow-auto px-2">
-                  <p className="font-semibold">Title - {task.task}</p>
+                  <p className="font-semibold">{task.task}</p>
                   <p className="text-gray-400 whitespace-pre-wrap break-words">
                     {task.desc}
                   </p>
