@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast"; // <-- For notifications
@@ -68,7 +68,7 @@ const Register = () => {
       }
     } else {
       toast.success("Account created! Please check your email to verify.");
-      setTimeout(() => navigate("/"), 3000); // Redirect after signup
+      setTimeout(() => navigate("/login"), 3000); // Redirect after signup
     }
   };
 
@@ -151,9 +151,9 @@ const Register = () => {
           {/* Link to login page */}
           <span>
             Already have an account?{" "}
-            <a href="/login" className="text-blue-500 underline">
+            <Link to="/login" className="text-blue-500 underline">
               Login here!
-            </a>
+            </Link>
           </span>
         </form>
       </div>

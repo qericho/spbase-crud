@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../supabaseClient";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
@@ -126,9 +126,9 @@ const Login = () => {
           {/* Link to registration */}
           <span>
             Don't have an account?{" "}
-            <a href="/register" className="text-blue-500 underline">
+            <Link to="/register" className="text-blue-500 underline">
               Register here!
-            </a>
+            </Link>
           </span>
         </form>
       </div>
