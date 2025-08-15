@@ -68,7 +68,7 @@ const Register = () => {
       }
     } else {
       toast.success("Account created! Please check your email to verify.");
-      setTimeout(() => navigate("/login"), 3000); // Redirect after signup
+      setTimeout(() => navigate("/"), 3000); // Redirect after signup
     }
   };
 

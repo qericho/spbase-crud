@@ -8,7 +8,7 @@ import { supabase } from "./supabaseClient";
 
 // ProtectedRoute checks if user is logged in before allowing access
 const ProtectedRoute = ({ children }) => {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(undefined);
 
   useEffect(() => {
     // Get current session
@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
   }, []);
 
   // Loading state while checking session
-  if (session === null) {
+  if (session === undefined) {
     return <p>Loading...</p>;
   }
 
@@ -63,8 +63,11 @@ const App = () => {
             }
           />
 
-          {/* Redirect any unknown routes to /crud */}
-          <Route path="*" element={<Navigate to="/crud" replace />} />
+          {/* Redirect default "/" to "/login" */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+
+          {/* Redirect any unknown routes to "/login" */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

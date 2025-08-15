@@ -248,7 +248,7 @@ const Crud = () => {
         />
         <button
           type="submit"
-          className="text-sm font-semibold bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition"
+          className="cursor-pointer text-sm font-semibold bg-green-500 text-white px-5 py-2 rounded hover:bg-green-600 transition"
         >
           Save
         </button>
